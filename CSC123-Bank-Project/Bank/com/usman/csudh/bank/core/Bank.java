@@ -1,26 +1,63 @@
 package com.usman.csudh.bank.core;
-import java.io.IOException;
+import java.io.File;  
+import java.io.FileNotFoundException;
+import java.io.IOException; 
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.TreeMap;
+import java.util.ArrayList;
 
 public class Bank {
 	
 	private static Map<Integer,Account> accounts=new TreeMap<Integer,Account>();
+	private static ArrayList <String> a = new ArrayList <String>();
 	
-	public static Account openCheckingAccount(String firstName, String lastName, String ssn, double overdraftLimit) {
-		Customer c=new Customer(firstName,lastName, ssn);
-		Account a=new CheckingAccount(c,overdraftLimit);
-		accounts.put(a.getAccountNumber(), a);
+	private static String [] array = new String[1];
+	
+	//My added things
+	private static String accountCurrency;
+	
+	
+	
+	public static void setCurrency(String c) //constructor
+	{
+		accountCurrency = c;
+		
+		
+	}
+	
+	
+	
+	//Professor's Stuff
+	public static Account openCheckingAccount(String firstName, String lastName, String ssn, double overdraftLimit ) {
+		
+		Customer c=new Customer(firstName,lastName, ssn , accountCurrency);
+		Account a=new CheckingAccount(c,overdraftLimit , accountCurrency);
+	
+		accounts.put(a.getAccountNumber(), a );
+		
+        
 		return a;
 		
 	}
 	
-	public static Account openSavingAccount(String firstName, String lastName, String ssn) {
-		Customer c=new Customer(firstName,lastName, ssn);
-		Account a=new SavingAccount(c);
+	
+	public static Account openSavingAccount(String firstName, String lastName, String ssn ) {
+		
+		
+		String cur = accountCurrency;
+		//AccountCurrency ac = new AccountCurrency (accountCurrency);
+		Customer c=new Customer(firstName,lastName, ssn , cur);
+		Account a=new SavingAccount(c , accountCurrency);
+		
+		
 		accounts.put(a.getAccountNumber(), a);
+		
+		
+		//
+		
 		return a;
 		
 	}
@@ -74,7 +111,39 @@ public class Bank {
 	}
 				
 	
+	//my added methods
 	
 	
+     public static void accountInfo ( int accountNumber , OutputStream out) throws IOException , NoSuchAccountException , AccountClosedException
+     {
+    	 
+    	 
+    	 
+    	 if(!accounts.containsKey(accountNumber)) {
+ 			throw new NoSuchAccountException("\nAccount number: "+accountNumber+" nout found!\n\n");
+ 			
+ 			
+ 		}
+    	 
+    	 else if (accounts.containsKey(accountNumber))
+    	 {
+    		
+    		 
+    		 Collection<Account> col=accounts.values() ; //Creation of collection with  value of accounts map
+    			
+    			for (Account a:col) {
+    				//System.out.println(a.toString2());
+    				out.write(a.toString2().getBytes());
+    				out.write((byte)10);
+    			
+    			
+    			  out.write((byte)10);
+    			  out.flush();
+    				
+    			}
+    	 }
+		
+	
+     }
 	
 }

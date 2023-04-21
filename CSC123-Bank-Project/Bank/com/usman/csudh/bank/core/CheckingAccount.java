@@ -6,9 +6,13 @@ public class CheckingAccount extends Account implements Serializable{
 	private static final long serialVersionUID = 1L;
 	double overdraftLimit;
 	
-	public CheckingAccount(Customer customer,double od) {
-		super("Checking",customer);
+	//Added fields
+	String ac;
+	
+	public CheckingAccount(Customer customer,double od , String ac) {
+		super("Checking",customer , ac);
 		this.overdraftLimit=od;
+		//this.ac = ac;
 	}
 
 
@@ -32,5 +36,17 @@ public class CheckingAccount extends Account implements Serializable{
 		this.overdraftLimit = overdraftLimit;
 	}
 	
+	//
+	
+	public void setCurrency(String a)
+	{
+		//this.ac = a;
+		
+	}
+	
+	public String getCurrency ()
+	{
+		return ac;
+	}
 	
 }

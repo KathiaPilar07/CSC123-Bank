@@ -1,8 +1,16 @@
 package com.usman.csudh.bank.core;
-import java.io.IOException;
+import java.io.File;   
+import java.io.FileNotFoundException;
+import java.io.IOException;   
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
+
+
+//
+import java.util.Formatter;
 
 import com.usman.csudh.util.UniqueCounter;
 
@@ -12,15 +20,30 @@ public class Account implements Serializable {
 	private String accountName;
 	private Customer accountHolder;
 	private ArrayList<Transaction> transactions;
+	private static HashMap<String , Double> exchange2 = new HashMap <String , Double > ();
 	
 	private boolean open=true;
 	private int accountNumber;
+	
+	//Added fields
+	
+	private String currency;
+	private String faith;
+	private static double usdB;
+	
+	
 
-	protected Account(String name, Customer customer) {
-		accountName=name;
+	protected Account(String name, Customer customer , String cu ) 
+	{
+		accountName=name; //Checking or Saving
 		accountHolder=customer;
+		currency = cu;
 		transactions=new ArrayList<Transaction>();
 		accountNumber=UniqueCounter.nextValue();
+		
+		String str = customer.toString();
+		faith = str;
+		
 	}
 	
 	public String getAccountName() {
@@ -30,6 +53,68 @@ public class Account implements Serializable {
 	public Customer getAccountHolder() {
 		return accountHolder;
 	}
+	
+	//Added things
+	
+	public String getCurrency()
+	{
+		return currency;
+	}
+	
+	
+	public   double usdBalance()
+	{
+		double uBalance = 0;
+		Formatter fr = new Formatter();
+		 
+		 try {
+			    
+				String str = "exchange-rate.csv"; 
+				File myf = new File (str); 
+				
+				Scanner scan = new Scanner (myf);
+				 
+				
+				while (scan.hasNext())
+				{
+					String st = scan.nextLine();
+					
+					String [] array = st.split(",");
+					
+					exchange2.put(array[0] , Double.parseDouble(array[2]));
+					
+					 //System.out.println(exchange.get(array[0]));
+					
+				
+	             }
+				
+				
+				
+				
+				
+				
+			    
+				uBalance = getBalance() * exchange2.get(currency);
+				
+				if (currency == null)
+				{
+					//System.out.println("NULL");
+				}
+				
+				
+				fr.format("%.2f", uBalance);
+		
+	        }
+	        
+	        catch(FileNotFoundException e)
+	        {
+	        	System.out.println("");
+	        	
+	        }
+		 
+		 return uBalance;
+	}
+	//Professor's stuff
 
 	public double getBalance() {
 		double workingBalance=0;
@@ -80,7 +165,10 @@ public class Account implements Serializable {
 	}
 
 	public String toString() {
-		String aName=accountNumber+"("+accountName+")"+" : "+accountHolder.toString()+ " : "+getBalance()+" : "+(open?"Account Open":"Account Closed");
+		
+		String aName=accountNumber+"("+accountName+")"+" : "+accountHolder.toString() +" : " + currency +" : "+getBalance()+ " : " + "USD"+" : " +usdBalance() + " : "+(open?"Account Open":"Account Closed");
+		
+		
 		return aName;
 	}
 	 
@@ -98,4 +186,25 @@ public class Account implements Serializable {
 		out.flush();
 		
 	}
+	
+	//My added methods
+	
+	public Account ()
+	{
+		
+	}
+	
+	
+
+	public String toString2() //This second toString is for option 5
+	{
+		String[] d = faith.split("\\s");
+		
+		String aName= "Account Number: " + accountNumber+ "\n" + "Type: "+ "("+accountName+")"+" \n"+ "Name:"  +d[0]+" " + d[1] + "\n" +"SSN: " +d[2] + "\n" +"Balance in " +currency +" : " +getBalance()+ "\n" +"Balance in " + "USD"+" : " +usdBalance() + "\n"+ "Status: " + ( open?"Account Open":"Account Closed");
+		//System.out.println(aName);
+		
+		return aName;
+	} 
+	
+	
 }

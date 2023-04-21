@@ -1,8 +1,8 @@
 package com.usman.csudh.bank.core;
 /***********************
- * 1 - IMPORTS  *
+ * 1 - IMPORTS  *  
  ***********************/
-
+ 
 import java.io.Serializable;
 
 
@@ -10,7 +10,7 @@ import java.io.Serializable;
  * 2 - Class declaration2
  **********************************/
 
-public class Customer implements Serializable{
+public class Customer {
 	
 	private static final long serialVersionUID = 1L;
 	/**********************************
@@ -26,6 +26,10 @@ public class Customer implements Serializable{
 	private String lastName;
 	private String ssn;
 	
+	//added fields
+	
+	private static String currency;
+	
 	
 	/**********************************
 	 * 3 -CONSTRUCTORS
@@ -35,20 +39,65 @@ public class Customer implements Serializable{
 	 * A class can have multiple constructors as long as their signatures stay unique 
 	 **********************************/
 	
+	//This method is mine 
+	public static void addCurrency(String aCurrency)
+	{
+		//currency = aCurrency;
+	}
+	
+	//professor's methods
 
-	public Customer(String fName, String lName, String ssn) {
-		setFirstName(fName);
-		setLastName(lName);
-		setSSN(ssn);
+	public Customer(String fName, String lName, String ssN , String cur ) {
+		
+		
+		
+		if (cur == null) {
+			
+			setFirstName(fName);
+			setLastName(lName);
+			setSSN(ssN);
+		}
+		
+		else 
+		{
+			setFirstName(fName);
+			setLastName(lName);
+			setSSN(ssN);
+			setCurrency(cur);
+		}
+		
+		
 		
 	}
 	
 	public Customer() {}
 
 	public Customer(Customer p) {
-		this.firstName=p.getFirstName();
+		
+		/*this.firstName=p.getFirstName();
 		this.lastName=p.getLastName();
-		this.ssn=p.getSSN();
+		this.ssn=p.getSSN();**/
+		
+		if (!(currency == null))
+		{
+			this.firstName=p.getFirstName();
+			this.lastName=p.getLastName();
+			this.ssn=p.getSSN();
+			this.currency = p.getCurrency();
+			
+			//Account send = new Account (this.firstName, this.ssn , this.lastName);
+			
+		}
+		
+		else 
+		{
+			this.firstName=p.getFirstName();
+			this.lastName=p.getLastName();
+			this.ssn=p.getSSN();
+			
+		}
+		
+			
 	}	
 	
 	/**********************************
@@ -90,6 +139,17 @@ public class Customer implements Serializable{
 		return ssn;
 	}
 	
+	//Added methods
+
+	public void setCurrency(String ca)
+	{
+		currency = ca;
+	}
+	public String getCurrency() {
+		return currency;
+	}
+	
+	
 
 
 	
@@ -103,7 +163,20 @@ public class Customer implements Serializable{
 	@Override
 	public String toString() {
 		
-		return firstName+" : "+lastName+" : "+ssn; 
+		if (currency == null)
+		{
+			return firstName+" : "+lastName+" : "+ssn; 
+		}
+		
+		else 
+		{
+			return firstName+" : "+lastName+" : "+ssn ; 
+		}
+		
+			
+		
+	
+		
 	}
 	
 	/**
@@ -112,13 +185,33 @@ public class Customer implements Serializable{
 	 */
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
+		if (currency == null)
+		{
+			Customer other=(Customer)obj;
+			return this.firstName.equalsIgnoreCase(other.getFirstName())
+					&&this.lastName.equalsIgnoreCase(other.getLastName())
+							&&this.ssn.equalsIgnoreCase(other.getSSN());
+		}
+		else 
+		{
+			Customer other=(Customer)obj;
+			return this.firstName.equalsIgnoreCase(other.getFirstName())
+					&&this.lastName.equalsIgnoreCase(other.getLastName())
+							&&this.ssn.equalsIgnoreCase(other.getSSN())
+							   && this.currency.equalsIgnoreCase(other.getCurrency());
+			
+		}
 		
-		Customer other=(Customer)obj;
-		return this.firstName.equalsIgnoreCase(other.getFirstName())
-				&&this.lastName.equalsIgnoreCase(other.getLastName())
-						&&this.ssn.equalsIgnoreCase(other.getSSN());
+		
+		
 	}
+	
+			
+		
+	
+		
 	
 	
 	
