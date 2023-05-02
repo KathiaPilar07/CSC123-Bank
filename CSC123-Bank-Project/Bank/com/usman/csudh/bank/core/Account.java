@@ -27,7 +27,7 @@ public class Account implements Serializable {
 	
 	//Added fields
 	
-	private String currency;
+	private String currency; 
 	private String faith;
 	private static double usdB;
 	

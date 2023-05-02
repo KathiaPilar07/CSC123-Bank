@@ -1,11 +1,6 @@
 
 //Professor's stuff 🡳
 package com.usman.csudh.bank;
-import java.io.File;   
-import java.io.FileNotFoundException;
-import java.io.IOException;  
-import java.io.InputStream;
-import java.io.OutputStream;
 import com.usman.csudh.bank.core.Account;
 import com.usman.csudh.bank.core.AccountClosedException;
 import com.usman.csudh.bank.core.Bank;
@@ -20,7 +15,16 @@ import java.util.HashMap;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
-public class MainBank 
+import java.net.*;
+import java.io.*;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class MainBank  
+
+
+
 
 {
      
@@ -53,6 +57,7 @@ public class MainBank
     /* I'm not sure how to store the csv file into the TreeMap , or Hashmap, IDK which one is better to do this **/
 	
 	private static String f;
+	private static URL u;
 	
 	//Declare main menu and prompt to accept user input
 	public static final String[] menuOptions = { "Open Checking Account%n","Open Saving Account%n", "List Accounts%n","View Statement%n","Show Account Information%n" ,"Deposit Funds%n", "Withdraw Funds%n",
@@ -76,23 +81,41 @@ public class MainBank
 	public static void main(String[] args) throws IOException , Exception // 🡰 I added this
 	{
 		
-		// 1. I added this 🡳 (This part is the part where the driver reads the file and checks if it exists or if is able to load).
+		// 1. I added this 🡳 (This part is the part where the driver reads the url and checks if it exists or if is able to load).
        
 		
-		 // 2) File not found exception
-        /* it works if I put the path directly (C:\Users\khernandez266\Documents\filename), but It needs to be able to find the csv 
-         * file at any location of other computers
-         * example: I have this file stored in my documents , but the program will not be able to find the file in other machines **/
-		
-	
-		
-		//2. Here I store the data of the csv file 
+		 
 		
 		      // Verify if the file exists 
-		
-		        try {
+		           
+		         String ur = "http://www.usman.cloud/banking/exchange-rate.csv";
+		        if(urlExists(ur))
+		        {
+		        	
+		        	URL url = new URL("http://www.usman.cloud/banking/exchange-rate.csv");
+		            BufferedReader inp = new BufferedReader(new InputStreamReader(url.openStream()));
 
-					String str = "exchange-rate.csv"; 
+		            String inputLine;
+		            
+		            
+		            while ((inputLine = inp.readLine()) != null) {
+		               // System.out.println(inputLine);
+		            	
+
+						String st = inp.toString();
+						
+						String [] array = inputLine.split(",");
+						
+						exchange.put(array[0] , Double.parseDouble(array[2]));
+						
+		            }
+		            
+		           // File myf = new File (inputLine); 
+		            inp.close();
+		            
+		            u = url;
+
+					/*String str = "exchange-rate.csv"; 
 					File myf = new File (str); 
 					
 					Scanner scan = new Scanner (myf);
@@ -107,22 +130,20 @@ public class MainBank
 						
 						exchange.put(array[0] , Double.parseDouble(array[2]));
 						
-						 //System.out.println(exchange.get(array[0]));
 						
-					
-		             }
+		             }**/
 					
 					
 					
 			
 		        }
 		        
-		        catch(FileNotFoundException e)
-		        {
-		        	System.out.println("**Currency File Could Not Be Loaded , Currency Conversion Service and Foreign"
+		        else
+		        
+		        	System.out.println("**Currency information Could Not Be Loaded , Currency Conversion Service and Foreign"
 					+ "Currency accounts are not available** \n ");
 		        	
-		        }
+		        
 		        
 		       
 		    	
@@ -136,7 +157,8 @@ public class MainBank
 	
 	
 	//The core of the program responsible for providing user experience.
-	public void run() {
+	public void run() throws Exception
+	{
 
 		Account acc;
 		int option = 0;
@@ -153,71 +175,14 @@ public class MainBank
 					
 					//Compact statement to accept user input, open account, and print the result including the account number
 					
-					/*try {
-
-			
-						File myfile = new File (f); 
-						
-						Scanner scan = new Scanner (myfile);
-						
-						if(myfile.exists())
-						{
-							ui.print(MSG_ACCOUNT_OPENED,
-									new Object[] { Bank.openCheckingAccount(ui.readToken(MSG_FIRST_NAME),
-											ui.readToken(MSG_LAST_NAME), ui.readToken(MSG_SSN),
-											ui.readDouble(MSG_ACCOUNT_OD_LIMIT)).getAccountNumber() });
-							
-							Scanner sc = new Scanner (System.in);
-							String input;
-							
-							
-							
-							do {
-
-								System.out.println(ui.readToken(MSG_ACCOUNT_CURRENCY));
-								input= sc.nextLine();
-								
-								
-
-								if(exchange.containsKey(input))
-								{
-									//Bank.Bank(input);
-									
-								}
-								
-								else if (!(exchange.containsKey(input)))
-								{
-									System.out.println("ERROR");
-								}
-								
-							}while (!(exchange.containsKey(input)));
-							
-						
-						}
-						
-						else 
-						{
-							ui.print(MSG_ACCOUNT_OPENED,
-									new Object[] { Bank.openCheckingAccount(ui.readToken(MSG_FIRST_NAME),
-											ui.readToken(MSG_LAST_NAME), ui.readToken(MSG_SSN),
-											ui.readDouble(MSG_ACCOUNT_OD_LIMIT)).getAccountNumber() });
-						} 
-						
-			        } 
-			        
-			        catch(FileNotFoundException e)
-			        {
-			        	System.out.println("");
-			        	
-			        } */
+					
                        try {
 
 						
-						File myfile = new File (f); 
 						
-						Scanner scan = new Scanner (myfile);
+						String uStr = "http://www.usman.cloud/banking/exchange-rate.csv";
 						
-						if(myfile.exists())
+						if(urlExists(uStr))
 						{
 							
 							Scanner sc = new Scanner (System.in);
@@ -253,6 +218,8 @@ public class MainBank
 						
 						else 
 						{
+							
+							System.out.println("Sorry URL was not found");
 							ui.print(MSG_ACCOUNT_OPENED,
 									new Object[] { Bank.openCheckingAccount(ui.readToken(MSG_FIRST_NAME),
 											ui.readToken(MSG_LAST_NAME), ui.readToken(MSG_SSN),
@@ -274,20 +241,14 @@ public class MainBank
 				case 2:
 					
 					//Compact statement to accept user input, open account, and print the result including the account number
-					/*ui.print(MSG_ACCOUNT_OPENED,
-							new Object[] { Bank
-									.openSavingAccount(ui.readToken(MSG_FIRST_NAME),
-											ui.readToken(MSG_LAST_NAME), ui.readToken(MSG_SSN))
-									.getAccountNumber() });**/
+					
 					
 					try {
 
 						
-						File myfile = new File (f); 
+						String uStr = "http://www.usman.cloud/banking/exchange-rate.csv";
 						
-						Scanner scan = new Scanner (myfile);
-						
-						if(myfile.exists())
+						if(urlExists(uStr))
 						{
 							
 							Scanner sc = new Scanner (System.in);
@@ -411,15 +372,15 @@ public class MainBank
 					/* This option is in charge of the currency convertion     **/
 					
 					
-					try {
+					//try {
 
 						
-						File myfile = new File (f); 
+						//File myfile = new File (f); 
 						
-						Scanner scan = new Scanner (myfile);
+						//Scanner scan = new Scanner (myfile);
 						
-						if(myfile.exists())
-						{
+						//if(u.getContent().equals("http://www.usman.cloud/banking/exchange-rate.csv"))
+						//{
 							
 							
 							Scanner sc = new Scanner (System.in);
@@ -500,23 +461,23 @@ public class MainBank
 							
 
 						
-						}
+						//}
 						
-						else 
+						/*else 
 						{
 							ui.print(MSG_ACCOUNT_OPENED,
 									new Object[] { Bank.openSavingAccount(ui.readToken(MSG_FIRST_NAME),
 											ui.readToken(MSG_LAST_NAME), ui.readToken(MSG_SSN))
 											.getAccountNumber() });
-						}
+						}**/
 						
-			        }
+			       // }
 			        
-			        catch(FileNotFoundException e)
+			        /*catch(FileNotFoundException e)
 			        {
 			        	System.out.println("**This Option is not available**");
 			        	
-			        }
+			        }**/
 					
 			
 				
@@ -562,6 +523,22 @@ public class MainBank
 	private  void handleException(UIManager ui, Exception e) throws IOException{
 		ui.print(e.getMessage(), new Object[] { });
 	}
+	
+	
+	
+	//This method is to check if the url exists
+	public static boolean urlExists(String uString) 
+	{
+        try {
+            URL url = new URL(uString);
+            HttpURLConnection.setFollowRedirects(false);
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setRequestMethod("HEAD");
+            return (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
 
 }

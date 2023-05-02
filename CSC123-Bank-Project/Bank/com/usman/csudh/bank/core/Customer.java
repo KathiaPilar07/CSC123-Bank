@@ -52,7 +52,7 @@ public class Customer {
 		
 		
 		if (cur == null) {
-			
+			 
 			setFirstName(fName);
 			setLastName(lName);
 			setSSN(ssN);
